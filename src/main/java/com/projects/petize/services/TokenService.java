@@ -23,12 +23,11 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            String token = JWT.create()
+            return JWT.create()
                     .withIssuer("petize")
                     .withSubject(user.getEmail()) //quem tá recebendo o token... (vinculando o email no token) | Adicionar aqui os dados que vão junto com o token
                     .withExpiresAt(this.generateExpirationDate())
                     .sign(algorithm);
-            return token;
 
         } catch (JWTCreationException exception) {
             throw new JWTGenerationException();
