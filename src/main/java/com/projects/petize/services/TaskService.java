@@ -12,7 +12,9 @@ import com.projects.petize.exceptions.HasPendingSubtasksException;
 import com.projects.petize.exceptions.TaskNotFoundException;
 import com.projects.petize.repositories.SubtaskRepository;
 import com.projects.petize.repositories.TaskRepository;
+import com.projects.petize.utils.TaskSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -40,15 +42,23 @@ public class TaskService {
         return toDTO(task);
     }
 
+
     public List<TaskResponseDTO> listTasks(TaskStatus status, TaskPriority priority, LocalDate dueDate) {
         Long userId = getAuthenticatedUserId();
 
-        List<Task> tasks;
-        if (status != null && priority != null && dueDate != null) {
-            tasks = taskRepository.findByUserIdAndStatusAndPriorityAndDueDate(userId, status, priority, dueDate);
-        } else {
-            tasks = taskRepository.findByUserId(userId);
+        Specification<Task> spec = TaskSpecifications.hasUserId(userId);
+
+        if (status != null) {
+            spec = spec.and(TaskSpecifications.hasStatus(status));
         }
+        if (priority != null) {
+            spec = spec.and(TaskSpecifications.hasPriority(priority));
+        }
+        if (dueDate != null) {
+            spec = spec.and(TaskSpecifications.hasDueDate(dueDate));
+        }
+
+        List<Task> tasks = taskRepository.findAll(spec);
 
         return tasks.stream().map(this::toDTO).toList();
     }
@@ -82,6 +92,13 @@ public class TaskService {
 
         if (!task.getUserId().equals(getAuthenticatedUserId())) {
             throw new AccessDeniedException();
+        }
+
+        boolean hasIncompleteSubtasks = task.getSubtasks().stream()
+                .anyMatch(subtask -> subtask.getStatus() != TaskStatus.COMPLETED);
+
+        if (hasIncompleteSubtasks) {
+            throw new HasPendingSubtasksException();
         }
 
         taskRepository.delete(task);
