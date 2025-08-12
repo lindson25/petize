@@ -1,7 +1,6 @@
 package com.projects.petize.controllers;
 
 import com.projects.petize.dtos.AttachmentResponseDTO;
-import com.projects.petize.entities.Attachment;
 import com.projects.petize.services.AttachmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
