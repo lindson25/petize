@@ -12,7 +12,7 @@ public record RegisterRequestDTO(
         @NotBlank(message = "Email is required")
         String email,
 
-        @NotBlank(message = "Passoword is required")
+        @NotBlank(message = "Password is required")
         String password
 ) {
 }
