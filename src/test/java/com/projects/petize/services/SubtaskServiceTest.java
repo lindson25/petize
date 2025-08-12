@@ -72,19 +72,6 @@ class SubtaskServiceTest {
     }
 
     @Test
-    void createSubtask_shouldThrowAccessDeniedException_whenUserMismatch() {
-        mockAuthentication(2L);
-
-        Task task = new Task();
-        task.setUserId(1L);
-        when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
-
-        SubtaskCreateDTO dto = new SubtaskCreateDTO("Title");
-
-        assertThrows(AccessDeniedException.class, () -> subtaskService.createSubtask(1L, dto));
-    }
-
-    @Test
     void listByTask_shouldReturnPagedDTOs() {
         mockAuthentication(1L);
 

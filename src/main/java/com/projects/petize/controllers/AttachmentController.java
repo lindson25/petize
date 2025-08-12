@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/tasks/{taskId}/attachments")
+@RequestMapping("/api/tasks/{taskId}/attachments")
 @RequiredArgsConstructor
 public class AttachmentController {
 
