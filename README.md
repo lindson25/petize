@@ -71,5 +71,5 @@ http://localhost:8080
 
 ## 📚 Documentação Completa
 
-Toda a documentação adicional está disponível na pasta [`documentation`](./documentation).  
+Toda a documentação adicional está disponível na pasta [`documentation`](/DOCUMENTATION).
 Dê uma olhada lá para mais detalhes!  
