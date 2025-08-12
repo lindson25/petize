@@ -13,11 +13,13 @@ import com.projects.petize.exceptions.TaskNotFoundException;
 import com.projects.petize.repositories.SubtaskRepository;
 import com.projects.petize.repositories.TaskRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,12 +40,13 @@ public class SubtaskService {
         return toDTO(subtask);
     }
 
-    public List<SubtaskResponseDTO> listByTask(Long taskId) {
-        getUserTask(taskId);
-        return subtaskRepository.findByTaskId(taskId)
-                .stream()
-                .map(this::toDTO)
-                .toList();
+    public Page<SubtaskResponseDTO> listByTask(Long taskId, int page, int size, String sortBy, String direction) {
+        Pageable pageable = PageRequest.of(page, size,
+                direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending()
+        );
+
+        Page<Subtask> subtasks = subtaskRepository.findByTaskId(taskId, pageable);
+        return subtasks.map(this::toDTO);
     }
 
     public SubtaskResponseDTO updateStatus(Long subtaskId, SubtaskUpdateStatusDTO dto) {

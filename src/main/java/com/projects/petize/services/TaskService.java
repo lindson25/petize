@@ -14,13 +14,16 @@ import com.projects.petize.repositories.SubtaskRepository;
 import com.projects.petize.repositories.TaskRepository;
 import com.projects.petize.utils.TaskSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,25 +45,22 @@ public class TaskService {
         return toDTO(task);
     }
 
-
-    public List<TaskResponseDTO> listTasks(TaskStatus status, TaskPriority priority, LocalDate dueDate) {
+    public Page<TaskResponseDTO> listTasks(TaskStatus status, TaskPriority priority, LocalDate dueDate,
+                                           int page, int size, String sortBy, String direction) {
         Long userId = getAuthenticatedUserId();
+
+        Pageable pageable = PageRequest.of(page, size,
+                direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending()
+        );
 
         Specification<Task> spec = TaskSpecifications.hasUserId(userId);
 
-        if (status != null) {
-            spec = spec.and(TaskSpecifications.hasStatus(status));
-        }
-        if (priority != null) {
-            spec = spec.and(TaskSpecifications.hasPriority(priority));
-        }
-        if (dueDate != null) {
-            spec = spec.and(TaskSpecifications.hasDueDate(dueDate));
-        }
+        if (status != null) spec = spec.and(TaskSpecifications.hasStatus(status));
+        if (priority != null) spec = spec.and(TaskSpecifications.hasPriority(priority));
+        if (dueDate != null) spec = spec.and(TaskSpecifications.hasDueDate(dueDate));
 
-        List<Task> tasks = taskRepository.findAll(spec);
-
-        return tasks.stream().map(this::toDTO).toList();
+        Page<Task> tasks = taskRepository.findAll(spec, pageable);
+        return tasks.map(this::toDTO);
     }
 
     public TaskResponseDTO updateStatus(Long id, TaskUpdateStatusDTO dto) {

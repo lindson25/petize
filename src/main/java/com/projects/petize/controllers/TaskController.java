@@ -8,11 +8,11 @@ import com.projects.petize.enums.TaskStatus;
 import com.projects.petize.services.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -27,12 +27,16 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskResponseDTO>> list(
+    public ResponseEntity<Page<TaskResponseDTO>> list(
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) TaskPriority priority,
-            @RequestParam(required = false) LocalDate dueDate
+            @RequestParam(required = false) LocalDate dueDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
     ) {
-        return ResponseEntity.ok(taskService.listTasks(status, priority, dueDate));
+        return ResponseEntity.ok(taskService.listTasks(status, priority, dueDate, page, size, sortBy, direction));
     }
 
     @PatchMapping("/{id}/status")

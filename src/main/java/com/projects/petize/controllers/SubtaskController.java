@@ -6,10 +6,9 @@ import com.projects.petize.dtos.SubtaskUpdateStatusDTO;
 import com.projects.petize.services.SubtaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks/{taskId}/subtasks")
@@ -27,8 +26,14 @@ public class SubtaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SubtaskResponseDTO>> list(@PathVariable Long taskId) {
-        return ResponseEntity.ok(subtaskService.listByTask(taskId));
+    public ResponseEntity<Page<SubtaskResponseDTO>> listByTask(
+            @PathVariable Long taskId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return ResponseEntity.ok(subtaskService.listByTask(taskId, page, size, sortBy, direction));
     }
 
     @PatchMapping("/{subtaskId}/status")
