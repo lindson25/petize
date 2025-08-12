@@ -3,7 +3,7 @@ package com.projects.petize.config;
 import com.projects.petize.entities.User;
 import com.projects.petize.exceptions.UserNotFoundException;
 import com.projects.petize.repositories.UserRepository;
-import com.projects.petize.services.TokenService;
+import com.projects.petize.services.TokenServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter { // classe para verificar uma requisição por vez se o token enviado na requisição foi feita pelo servidor
 
-    private final TokenService tokenService;
+    private final TokenServiceImpl tokenService;
 
     private final UserRepository userRepository;
 

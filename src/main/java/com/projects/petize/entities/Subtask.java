@@ -18,6 +18,7 @@ public class Subtask {
     private String title;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private TaskStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)

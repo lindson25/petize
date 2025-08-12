@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 class SubtaskServiceTest {
 
     @InjectMocks
-    private SubtaskService subtaskService;
+    private SubtaskServiceImpl subtaskService;
 
     @Mock
     private SubtaskRepository subtaskRepository;
@@ -100,7 +100,7 @@ class SubtaskServiceTest {
         Page<SubtaskResponseDTO> responsePage = subtaskService.listByTask(1L, 0, 10, "id", "asc");
 
         assertEquals(1, responsePage.getTotalElements());
-        assertEquals("Test", responsePage.getContent().get(0).title());
+        assertEquals("Test", responsePage.getContent().getFirst().title());
     }
 
     @Test

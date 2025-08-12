@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 class AttachmentServiceTest {
 
     @InjectMocks
-    private AttachmentService attachmentService;
+    private AttachmentServiceImpl attachmentService;
 
     @Mock
     private AttachmentRepository attachmentRepository;

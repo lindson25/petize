@@ -25,14 +25,19 @@ public class Task {
     private LocalDate dueDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private TaskStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private TaskPriority priority;
 
     private Long userId;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Subtask> subtasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> attachments = new ArrayList<>();
 
 }

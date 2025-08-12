@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 class TaskServiceTest {
 
     @InjectMocks
-    private TaskService taskService;
+    private TaskServiceImpl taskService;
 
     @Mock
     private TaskRepository taskRepository;
@@ -102,7 +102,7 @@ class TaskServiceTest {
         );
 
         assertEquals(1, response.getTotalElements());
-        assertEquals("Title", response.getContent().get(0).title());
+        assertEquals("Title", response.getContent().getFirst().title());
     }
 
     @Test

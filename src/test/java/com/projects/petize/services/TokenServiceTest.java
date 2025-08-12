@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TokenServiceTest {
 
-    private TokenService tokenService;
+    private TokenServiceImpl tokenService;
 
     @BeforeEach
     void setup() {
-        tokenService = new TokenService();
+        tokenService = new TokenServiceImpl();
         MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(tokenService, "secret", "mysecretkey");
     }

@@ -18,6 +18,7 @@ public class Attachment {
 
     private String fileType;
 
+    @Column(length = 1024)
     private String fileUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
